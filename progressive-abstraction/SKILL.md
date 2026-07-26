@@ -1,67 +1,67 @@
 ---
 name: progressive-abstraction
-description: 渐进式抽象的 issue 调研方法论——在陌生代码库中拿到一个 issue 后，不陷入技术细节，按三层抽象递进判断：架构修复方向 → 数据流与边界语义 → 具体方案。Use when the user asks to analyze / triage / investigate an issue or bug in an unfamiliar codebase, decide where a fix belongs before writing code, judge whether something is a product decision or a correctness problem, prepare an OSS contribution (issue comment / PR) that must survive maintainer review, or evaluate third-party / AI-generated review opinions against code evidence. 触发词：调研 issue、判断修复方向、分析根因、看这个 issue 怎么修、review 别人（或别的 AI）的判断。
+description: Three-layer issue triage methodology for unfamiliar codebases — never dive into implementation details before judging the fix at the architecture layer. Layer 1 identifies the owning layer and classifies the problem (correctness vs completeness vs product decision), Layer 2 traces the real data flow with verified file:line evidence and surfaces boundary semantics, Layer 3 proposes bounded solutions that declare what they deliberately do not do. Use when analyzing or triaging an issue/bug in an unfamiliar repository, deciding where a fix belongs before writing code, preparing an OSS contribution (issue comment / PR) that must survive maintainer review, or evaluating third-party and AI-generated review opinions against code evidence. For vague greenfield ideas use idea-to-spec first; for concrete modification tasks in a familiar repo use task-intake instead.
 ---
 
-# Progressive Abstraction：Issue 调研的三层递进
+# Progressive Abstraction: Three-Layer Issue Triage
 
-核心原则：**在架构层判断修复方向之前，绝不进入实现细节。** 拿到 issue 的第一反应不是读代码，而是问"这个问题属于哪一层"。
+**Core principle: never enter implementation details before the fix direction is judged at the architecture layer.** The first reaction to an issue is not reading code — it is asking "which layer owns this problem?"
 
-三层按顺序执行，每层有明确的输出物；上一层没有结论，不进入下一层。
+Execute the three layers in order. Each has a concrete output; do not advance while the current layer is unresolved.
 
-## L1：架构方向判断
+## L1: Architecture Direction
 
-目标：确定修复的**责任层**，并区分问题性质。
+Goal: identify the **owning layer** and classify the problem.
 
-1. 读 issue 全文和整个 comment thread。记录：谁报了问题、谁已诊断、团队有没有人参与、赛道是否已被占。
-2. 列出系统的候选层（例如：provider 适配 / 传输 / parse / schema / validation / 执行 / 投影），给出问题**应该**归属的一层，一句话说明理由。同时明确"修复**不**应该落在哪一层"——括号式排除（"at the parse boundary, not in the schema"）比正面描述更有信息量。
-3. 定性问题：**correctness 还是产品决策？** 判断标准：错误的行为是否会真实发生。
-   - 会发生错误行为 → correctness，直接修，不需要问任何人。
-   - 只是"覆盖不全 / 帮不到某些场景" → completeness，不是 correctness，不许被任何人（包括 AI reviewer）用"不正确"带节奏。
-   - 修不修取决于项目立场（如"要不要为第三方兜底"）→ 产品决策，**显式抛给 maintainer**，把决策写在评论里，不要静默替项目做选择。
-4. 本层输出：一句话修复方向 + 一句话问题定性 + 一句话赛道判断。
+1. Read the full issue and the entire comment thread. Record: who reported it, who already diagnosed, whether maintainers are involved, whether the lane is occupied.
+2. List the candidate layers of the system (e.g. provider adapter / transport / parse / schema / validation / execution / projection) and pick the one that *should* own the fix, with a one-line justification. Also state where the fix should **not** land — bracketed exclusion ("at the parse boundary, not in the schema") carries more information than a positive description.
+3. Classify the problem: **correctness, completeness, or product decision?** The test is whether wrong behavior can actually occur.
+   - Wrong behavior can occur → correctness. Fix it directly; ask no one.
+   - Only "coverage gaps / doesn't help some cases" → completeness. Do not let anyone (including AI reviewers) reframe it as "incorrect".
+   - Whether to fix depends on project stance (e.g. "should we absorb third-party quirks?") → product decision. **Hand it to the maintainers explicitly** in a comment; never make the choice silently for the project.
+4. Output: one line fix direction + one line problem classification + one line lane judgment.
 
-## L2：数据流与边界语义
+## L2: Data Flow & Boundary Semantics
 
-目标：用**真实代码**验证 L1 的判断，并识别不可忽视的边界语义。
+Goal: verify L1 against **real code** and surface boundary semantics that cannot be ignored.
 
-1. 从输入到失败点走一遍完整数据流，每一跳标注 `file:line`。**行号必须亲手验证**（基于当前 main / 确切版本），任何人（包括 AI）给的行号一律视为待验证假设。
-2. 画出数据流图：输入 → 各处理节点（file:line）→ 失败点。图是 L2 的核心输出物，不是装饰。
-3. 识别边界语义——那些"不看就会判错方案"的隐含事实。常见类型：
-   - **双重身份**：一个制品对两个读者的语义不同（如 schema 既对模型做广告、又对输入执法）；
-   - **反馈回路**：错误文本的读者是模型，它决定下一轮行为；
-   - **安全方向**：失败模式偏向哪边（如"漏转安全、错转才是事故"）——这决定保守策略是否成立；
-   - **历史先例**：同文件/同模块里已有的同类处理（新代码应长得像它所在的文件）。
-4. 本层输出：数据流图 + 边界语义清单（每条一句话，附 file:line 证据）。
+1. Trace the complete data flow from input to failure point, annotating every hop with `file:line`. **Verify every line number by hand** (against current main / the exact version); treat line numbers from anyone (including AI) as unverified hypotheses.
+2. Draw the flow: input → processing nodes (file:line) → failure point. The diagram is L2's core deliverable, not decoration.
+3. Identify boundary semantics — hidden facts that flip the solution if missed. Common types:
+   - **Dual identity**: one artifact means different things to two readers (e.g. a schema advertises to the model *and* enforces on input);
+   - **Feedback loops**: the reader of an error message is the model, and it shapes the next turn;
+   - **Safety direction**: which side failures lean toward (e.g. "missing a coercion is safe, a wrong one is the accident") — this is what justifies conservative strategies;
+   - **Local precedent**: existing handling of the same class in the same file/module (new code should look like the file it lives in).
+4. Output: the data-flow diagram + a boundary-semantics list (one line each, with file:line evidence).
 
-## L3：具体方案
+## L3: Bounded Solutions
 
-目标：给出**有界**的方案选项，每个方案自带"不做什么"。
+Goal: produce **bounded** options, each declaring what it does *not* do.
 
-1. 给出 2-4 个落点不同的选项（A/B/C/D），每个选项写清：落在哪层、改什么、**刻意不改什么**。
-2. 优先考虑**组合方案**（如"归一化 + 可见警告"）：一个解决功能，一个保留可观测性——单独的静默修复往往是半个方案。
-3. 方案的有界性即设计：明确声明 scope 外的东西（"不做 per-model 特例"、"不展开 `$ref`"），并说明为什么扩大范围是负收益（如"通用化的终点是重造已有的轮子"）。
-4. 测试即契约：用测试把**有意为之的行为**钉死（包括"有意的欠处理"），让 reviewer 看到边界是选择而非疏漏。
-5. 本层输出：方案对比 + 推荐组合 + scope 声明 + 测试策略。
+1. Present 2-4 options with different landing spots (A/B/C/D). For each: which layer, what it changes, **what it deliberately leaves alone**.
+2. Prefer **combinations** (e.g. "normalization + visible warning"): one move restores function, another preserves observability — a silent fix alone is usually half a solution.
+3. Boundedness *is* the design. Declare out-of-scope items explicitly ("no per-model special cases", "no `$ref` resolution") and why widening is negative value ("generalization ends in rebuilding a wheel the project already has").
+4. Tests as contract: pin **intentional behavior** with tests — including deliberate under-handling — so reviewers see the boundary as a choice, not an oversight.
+5. Output: option comparison + recommended combination + scope statement + test strategy.
 
-## 证据纪律（贯穿三层）
+## Evidence Discipline (applies to all layers)
 
-- **锁对象**：先确认 issue 涉及的确切对象（模型、版本、文件），再调研。对象不可验证（闭源、无公开 artifact）→ 降级到最近的可验证证据，并在措辞里如实标注边界，绝不外推。
-- **一手验证**：关键断言必须有原件支撑（拉原始文件读原文），不用二手转述——包括其他 AI 的结论、摘要、转引的"官方行为"。
-- **每条结论可辩护**：写进报告/评论/PR 的每一句话，问自己"maintainer 质疑这句时，我能拿出什么"。拿不出的，删掉或降级为推测并标注。
-- **评审第三方意见**（含 AI reviewer）：逐条判真伪，用代码证据说话；真的修，假的用仓库现存先例驳回；对方说"correctness"时先做 L1.3 的定性检验。
+- **Lock the object**: confirm the exact subject first (model, version, file), then research. If the object is unverifiable (closed source, no public artifact), degrade to the nearest verifiable evidence and mark the boundary in your wording — never extrapolate.
+- **First-hand verification**: every key claim needs the original artifact (fetch and read the source file), not secondhand summaries — including other AIs' conclusions, abstracts, or quoted "official behavior".
+- **Every sentence defensible**: for anything written into a report, comment, or PR body, ask "if a maintainer challenges this line, what do I show?" If nothing — delete it, or downgrade it to a labeled speculation.
+- **Judging third-party opinions** (including AI reviewers): verdict item by item, on code evidence; fix what is true, rebut what is false using the repo's own precedents; when someone claims "correctness", rerun the L1.3 classification test first.
 
-## 执行礼仪（方案确定之后）
+## Execution Etiquette (after the solution is set)
 
-- **先 comment 后 PR**：评论给增量内容，不重复前人诊断（引用 + 递进）；方位词带参照物（"on the harness side of the model boundary"，不写裸 "downstream"）；结尾领活（"I can implement this"）——方案 + 领活 = PR，方案 + 没下文 = 空气。
-- **PR 是提案不是决策**：决策权在 maintainer，body 越短越安全；证据留在评论区作弹药，被问时再甩，不要 front-load。
-- **响应纪律**：review 意见 20 分钟～2 小时内响应；逐条判定公开处理。
+- **Comment before PR**: add increment, never repeat a prior diagnosis (reference it and advance); qualify directional words ("on the harness side of the model boundary", never a bare "downstream"); end by claiming the work ("I can implement this") — proposal + claim = PR, proposal + silence = air.
+- **A PR is a proposal, not a decision**: authority stays with maintainers; a shorter body is a safer body. Keep evidence in reserve as comment ammunition — fire it when asked, do not front-load.
+- **Response discipline**: answer review feedback within 20 minutes to 2 hours; handle each point publicly and explicitly.
 
-## 反模式（全是实战翻车点）
+## Anti-Patterns (each one a real scar)
 
-- 拿到 issue 直接开始写代码；
-- 从第一行顺序读大文件（应沿一个变量的生命周期或一条数据流读）；
-- 把 AI 给的行号 / 定性当事实直接使用；
-- 为了"通用"扩大 scope，把手写 mini 解释器做成半个标准库；
-- 在 PR body 里写不可验证的断言；
-- comment 里复述别人已给出的诊断、不给增量、不领活。
+- Writing code the moment an issue arrives;
+- Reading large files top to bottom (read along a variable's lifecycle or a single data flow instead);
+- Using AI-provided line numbers or classifications as fact;
+- Widening scope for "generality" until a helper becomes half a standard library;
+- Asserting unverifiable claims in a PR body;
+- Restating an existing diagnosis in a comment without increment or a work claim.
