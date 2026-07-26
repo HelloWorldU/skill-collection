@@ -15,4 +15,6 @@ Then work backward from that endpoint toward the present. Everything that must b
 
 Converge when the core mechanic is unambiguous and every known risk is on the table — not when every conceivable question is answered. Then summarize the aligned idea and ask for approval.
 
+A spec is converged when you can say all three without hedging: what exists at the endpoint (e.g. "a CLI flag `--foo` that does X, visible in `--help`"), what is explicitly out of scope, and which risk is most likely to kill the idea. If any of the three still wobbles, keep pulling threads.
+
 **Do not write any code until the user approves.** That restraint is the whole point of this skill.
