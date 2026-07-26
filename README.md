@@ -18,10 +18,6 @@ Every rule here has a scar behind it. Visible receipts:
 
 - `progressive-abstraction` — distilled from [MoonshotAI/kimi-code#2175](https://github.com/MoonshotAI/kimi-code/pull/2175) and the triage of [#2118](https://github.com/MoonshotAI/kimi-code/issues/2118): three review rounds (two AI reviewers, one human-grade), every verdict decided on code evidence.
 
-## What is a skill?
-
-A skill is a `SKILL.md` file (YAML frontmatter + Markdown instructions) that gives an AI agent procedural knowledge for a specific kind of task — when to trigger, what steps to follow, what evidence standards to hold. Drop a skill folder into your agent's skills directory (e.g. `.agents/skills/`, `~/.config/agents/skills/`) and the agent picks it up automatically.
-
 ## Philosophy
 
 - **Methodology over mechanics** — these skills encode *how to think* (judgment order, evidence discipline), not just what commands to run.
