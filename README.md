@@ -4,12 +4,11 @@ A personal collection of battle-tested agent skills (SKILL.md packages) for AI c
 
 ## Skills
 
-Three lenses on the same discipline: *judgment before action*.
+Two lenses on the same discipline: *judgment before action*.
 
 | Lens | Skill | Description |
 |------|-------|-------------|
 | What to build | [idea-to-spec](./skills/idea-to-spec/SKILL.md) | Turn a vague idea into a concrete, approved spec through structured dialogue — surface ambiguities, probe feasibility, write no code until approval. |
-| How to build it | [task-intake](./skills/task-intake/SKILL.md) | Mandatory alignment gate before modifying code/files/config: restate requirements, enumerate scenarios with expected outcomes, stop for explicit approval, then implement under strict invariants. |
 | Where to fix it | [progressive-abstraction](./skills/progressive-abstraction/SKILL.md) | Three-layer issue triage for unfamiliar codebases: judge the architecture-level fix direction first, trace data flow and boundary semantics second, propose bounded solutions last. Built for OSS contributions that must survive maintainer review. |
 
 ## Provenance

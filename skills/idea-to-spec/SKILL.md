@@ -1,6 +1,6 @@
 ---
 name: idea-to-spec
-description: Turn a vague idea into a concrete, actionable spec through structured dialogue — disambiguating requirements, surfacing decision points, and probing technical feasibility before any code is written. Use when the user brings an open-ended or half-formed idea ("I want to build...", "what if we...", "help me create...") and the shape of the thing is not yet clear. Converges into an approved spec, after which concrete modification tasks should go through task-intake, and unfamiliar-codebase investigation through progressive-abstraction. Do not write code inside this skill — producing the aligned spec and getting it approved is the entire deliverable.
+description: Turn a vague idea into a concrete, actionable spec through structured dialogue — disambiguating requirements, surfacing decision points, and probing technical feasibility before any code is written. Use when the user brings an open-ended or half-formed idea ("I want to build...", "what if we...", "help me create...") and the shape of the thing is not yet clear. Converges into an approved spec; use progressive-abstraction for any subsequent unfamiliar-codebase investigation. Do not write code inside this skill — producing the aligned spec and getting it approved is the entire deliverable.
 ---
 
 # Idea to Spec
