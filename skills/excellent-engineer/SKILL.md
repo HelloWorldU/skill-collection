@@ -1,6 +1,6 @@
 ---
 name: excellent-engineer
-description: Use when facing an engineering task. First assesses how well the user knows the task's domain, then routes to the matching workflow. Currently supports fixing a GitHub issue.
+description: Use when fixing a GitHub issue. First assesses how well the user knows the issue's domain, then routes to the matching workflow.
 ---
 
 # Excellent Engineer
