@@ -1,0 +1,4 @@
+interface:
+  display_name: "Excellent Engineer"
+  short_description: "Fix GitHub issues at your level of expertise"
+  default_prompt: "Use $excellent-engineer to help me fix this GitHub issue."
