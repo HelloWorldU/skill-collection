@@ -1,21 +1,13 @@
 # skill-collection
 
-A personal collection of battle-tested agent skills (SKILL.md packages) for AI coding agents. Each skill here was distilled from real open-source work — not invented in a vacuum.
+Agent skills (SKILL.md packages) for AI coding agents, each distilled from real work.
 
 ## Skills
 
-Two lenses on the same discipline: *judgment before action*.
-
-| Lens | Skill | Description |
-|------|-------|-------------|
-| What to build | [idea-to-spec](./skills/idea-to-spec/SKILL.md) | Turn an idea into an approved spec: separate the goal from the means, derive requirements from verifiable facts, and check the means and existing solutions against them. No code until approval. |
-| How to fix it | [excellent-engineer](./skills/excellent-engineer/SKILL.md) | A gate for engineering tasks: assess how well the user knows the domain, then route to a workflow. Currently fixes a GitHub issue one step per turn, exposing the level of detail that fits the user's expertise. |
-
-## Philosophy
-
-- **Methodology over mechanics** — these skills encode *how to think* (judgment order, evidence discipline), not just what commands to run.
-- **Every rule has a scar** — each instruction exists because a real mistake or a real win proved it. Anti-patterns are documented alongside the workflow.
-- **Bounded on purpose** — each skill declares what it deliberately does not do.
+| Skill | What it does |
+|-------|--------------|
+| [idea-to-spec](./skills/idea-to-spec/SKILL.md) | Turn an idea into an approved spec by separating the goal from the means. |
+| [excellent-engineer](./skills/excellent-engineer/SKILL.md) | Fix a GitHub issue, exposing the level of detail that fits the user's expertise. |
 
 ## License
 
