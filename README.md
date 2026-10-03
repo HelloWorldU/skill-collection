@@ -8,7 +8,7 @@ Two lenses on the same discipline: *judgment before action*.
 
 | Lens | Skill | Description |
 |------|-------|-------------|
-| What to build | [idea-to-spec](./skills/idea-to-spec/SKILL.md) | Turn a vague idea into a concrete, approved spec through structured dialogue — surface ambiguities, probe feasibility, write no code until approval. |
+| What to build | [idea-to-spec](./skills/idea-to-spec/SKILL.md) | Turn an idea into an approved spec: separate the goal from the means, derive requirements from verifiable facts, and check the means and existing solutions against them. No code until approval. |
 | How to fix it | [excellent-engineer](./skills/excellent-engineer/SKILL.md) | A gate for engineering tasks: assess how well the user knows the domain, then route to a workflow. Currently fixes a GitHub issue one step per turn, exposing the level of detail that fits the user's expertise. |
 
 ## Philosophy

@@ -1,20 +1,17 @@
 ---
 name: idea-to-spec
-description: Turn a vague idea into a concrete, actionable spec through structured dialogue — disambiguating requirements, surfacing decision points, and probing technical feasibility before any code is written. Use when the user brings an open-ended or half-formed idea ("I want to build...", "what if we...", "help me create...") and the shape of the thing is not yet clear. Converges into an approved spec; use excellent-engineer for any subsequent GitHub issue fix. Do not write code inside this skill — producing the aligned spec and getting it approved is the entire deliverable.
+description: Use when the user brings an idea or goal. Separates the goal from the means, derives from verifiable facts what any means must satisfy, checks the user's means and existing solutions against those requirements, then converges on a spec the user approves.
 ---
 
 # Idea to Spec
 
-Begin from the endpoint: what does the user ultimately want to *exist* when this is done? If the user already provided a starting idea, use it as the starting point. Otherwise ask: *"Tell me what you want to create."*
+Complete only one step per turn.
 
-Then work backward from that endpoint toward the present. Everything that must be true for the idea to reach its endpoint is a thread to pull. In each turn, do two things:
+1. Separate the goal from the means: what result the user ultimately wants, and how they plan to get it.
+2. Clarify the goal: confirm with the user wherever the goal can be read more than one way.
+3. List the basic facts: verifiable facts that reaching the goal necessarily involves. List only what can be verified, not conventions.
+4. Derive the requirements and check the means: from these facts, derive the conditions any means must satisfy, then check whether the user's means satisfies them. For each condition it fails, name the fact it violates.
+5. Look for existing solutions: find existing solutions or tools that meet these requirements.
+6. Converge on a spec: state what will exist at the end, what is explicitly out of scope, and the biggest risk, then ask the user to approve.
 
-1. **Surface ambiguities** — wherever the path from idea to endpoint could be interpreted more than one way, ask about it. Pursue the gaps that actually change what gets built, one cluster at a time — not every minor detail.
-
-2. **Probe feasibility** — as the picture sharpens, flag anything that may be hard or impossible to build. Be specific about why, and offer a concrete alternative when something won't work.
-
-Converge when the core mechanic is unambiguous and every known risk is on the table — not when every conceivable question is answered. Then summarize the aligned idea and ask for approval.
-
-A spec is converged when you can say all three without hedging: what exists at the endpoint (e.g. "a CLI flag `--foo` that does X, visible in `--help`"), what is explicitly out of scope, and which risk is most likely to kill the idea. If any of the three still wobbles, keep pulling threads.
-
-**Do not write any code until the user approves.** That restraint is the whole point of this skill.
+Write no code until the user approves.
