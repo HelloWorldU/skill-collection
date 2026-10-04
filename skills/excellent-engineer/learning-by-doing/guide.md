@@ -4,7 +4,7 @@ Understand the problem's context first, then present it to the user in the steps
 
 1. Summarize the current state of the problem in one sentence.
 2. Explain the concepts needed to understand the problem's background, without specific technical terms.
-3. Expand again, explaining the concepts with their specific technical terms, only the few the problem needs, and summarize the current state of the problem again.
+3. Expand again, explaining the concepts with their specific technical terms, only the few the problem needs.
 4. Give the fix and the architectural layer where the fix belongs.
 5. Following the code flow, show the expected and actual behavior at each point of divergence.
 6. Write the solution.
